@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css" />
+    <title>Новый читатель</title>
+  </head>
+  <body>
+  <div class=menu>
+ <ul>
+ <li class = active><a href={{ url_for("new_reader")}}>Новый читатель</a></li>
+ </ul>
+ </div>
+  <div class="block">
+      <p></p>
+  <form action="{{ url_for('index') }}" method="get">
+      <label for="new_reader">Имя читателя:</label><input id="new_reader" type="text" name="new_reader">
+      <p></p>
+      <p></p>
+      <div>
+      <input type="submit">
+      <input type="reset" onclick="history.back()">
+          </div>
+  </form>
+  </div>
+  </body>
+</html>

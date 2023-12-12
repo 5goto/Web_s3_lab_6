@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+ <link rel="stylesheet" type="text/css" href="/static/CSS/style.css" />
+ <title> Карточка читателя </title>
+ <!—- Макрос для вывода таблицы без ключевого столбца,
+ переданного параметром -->
+ {% macro render_table(table_name, relation, id) %}
+ <p>
+ <b>{{table_name}} </b>
+ </p>
+ {% set n = len(relation) %}
+ <table class="table">
+ <tr>
+ {% for name in relation.dtypes.index %}
+ {% if name != id %}
+ <th>{{name}}</th>
+ {% endif %}
+ {% endfor %}
+ </tr>
+ <tbody>
+
+ {% for i in range(n) %}
+ <tr>
+ {% for name in relation.dtypes.index %}
+ {% if name != id %}
+ <td>
+ {% if relation.loc[i, name] == None %}
+ <form action = '' method ="get">
+ <input type="hidden" name = return value={{relation.loc[i, "book_reader_id"]}}>
+ <input type="submit" value="Сдать">
+ </form>
+ {% else %}
+ {{ relation.loc[i, name] }}
+ {% endif %}
+</td>
+ {% endif %}
+ {% endfor %}
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ {% endmacro %}
+<!—Вставить макрос для формирования поля со списком из ЛР 5 -->
+</head>
+<body>
+ <div class=menu>
+ <ul>
+ <li class = active><a href={{ url_for("index")}}>Читатель</a></li>
+{# <li><a href={{ url_for("book")}}>Книги</a></li>#}
+{# <li><a href={{ url_for("statistics")}}>Статистика</a></li>#}
+ </ul>
+ </div>
+ <div class = block>
+ <p>
+ <form action='' method ="get">
+ Читатель:
+     {% macro render_select(name, my_dict, key) %}
+   <select name='{{name}}'>
+      {% for item in my_dict %}
+       {% if item[0] == key %}
+      <option value='{{item[0]}}' selected>{{item[1]}}</option>
+       {% else %}
+       <option value='{{item[0]}}'>{{item[1]}}</option>
+       {% endif %}
+       {% endfor %}
+   </select>
+{% endmacro %}
+
+ {{ render_select("reader", combo_box.values, reader_id) }}
+
+ <input type="submit" value="Найти">
+ </form>
+ </p>
+ </p>
+ <!-- Пока страница не создана, не указывать ее в action "-->
+ <form action="{{url_for('new_reader')}}"  method="get">
+ <input type="submit" value="Новый читатель">
+ </form>
+ </p>
+ {{ render_table("Карточка",book_reader, "book_reader_id") }}
+ </p>
+ <!-- Пока страница не создана, не указывать ее в action -->
+ <form  method="get">
+ <input type="submit" value="Взять книгу">
+ </form>
+ </p>
+ </div>
+
+</body>
+</html>
