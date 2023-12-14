@@ -68,3 +68,47 @@
   padding: 10px 15px;
   position: relative;
 }
+
+.books-container {
+  display: flex;
+  flex-flow: wrap;
+}
+
+.card {
+  border-radius: 25px;
+  box-shadow: 2px 1px 1px #21212121;
+  background-color: #f7f9fb;
+  width: 450px;
+  padding: 1.25em;
+  margin: 1em;
+  color: #556b2f;
+}
+
+.filter-panel {
+  border: 1px solid #5da2d5;
+  margin: 0.5em;
+  padding: 0.5em;
+  border-radius: 5px;
+  color: #5da2d5;
+
+  height: 100%;
+  flex: 0 0 20%;
+}
+
+.aside__control {
+  padding-top: 5px;
+}
+
+.search-block {
+  display: flex;
+}
+
+.main__search-settings {
+  padding-top: 5px;
+  color: #f796b8;
+}
+
+.take_form {
+  width: 100px;
+  margin-left: 80%;
+}

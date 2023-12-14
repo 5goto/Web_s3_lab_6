@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+      <link rel="stylesheet" type="text/css" href="/static/CSS/style.css" />
+    <title>Поиск книг</title>
+     {% macro render_table(table_name, relations) %}
+               {% for rel, t_name in zip(relations, table_name) %}
+               <div class="t-unit">
+                    <p>
+                        <b>{{t_name}} </b>
+                    </p>
+                    <!-- количество строк в таблице -->
+                    {% set n = len(rel) %}
+                    <div class="books-container">
+
+                    <!-- для всех строк таблицы -->
+                    {% for i in range(n) %}
+                    <div class="card">
+                    <!-- выводим значение каждого столбца -->
+                    {% for name in rel.dtypes.index %}
+                        <p>{{ name }}: <b>{{ rel.loc[i, name] }}</b></p>
+                    {% endfor %}
+                        {% if rel.loc[i, 'Количество'] %}
+                            <form class="take_form" action={{ url_for("search") }}>
+                                <input type="hidden" name="take_book_id" value="{{ rel.loc[i, 'book_id'] }}">
+                                <input type="submit" value="Выбрать">
+                            </form>
+                            {% else %}
+                            <form class="take_form" action={{ url_for("search") }}>
+                                <input type="hidden" name="take_book_id" value="{{ rel.loc[i, 'book_id'] }}">
+                                <input type="submit" value="Выбрать" disabled>
+                            </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    </div>
+               </div>
+               {% endfor %}
+          {% endmacro %}
+
+        {% macro render_selected_search(search_genres, search_authors, search_publishers) %}
+            {% if search_genres or search_authors or search_publishers %}
+                {% if search_genres %}
+                    <span><b>Жанры: </b>{{ join_string(search_genres) }}</span>
+                {% endif %}
+                {% if search_authors %}
+                    <span><b>Авторы: </b>{{ join_string(search_authors) }}</span>
+                {% endif %}
+                {% if search_publishers %}
+                    <span><b>Издатели: </b>{{ join_string(search_publishers) }}</span>
+                {% endif %}
+          {% endif %}
+        {% endmacro %}
+
+        {% macro render_select(name, records) %}
+            {% set keys = list(records[0].keys()) %}
+            <details>
+                <summary><b>{{ keys[0] }}</b></summary>
+            {% for item in records %}
+                    <div>
+                        <input type="checkbox" id='{{ item[keys[0]] }}' name='{{ keys[0] }}' value='{{ item[keys[0]] }}'/>
+                        <label for={{ item[keys[0]] }}>{{ item[keys[0]] }} ({{ item[keys[1]] }})</label>
+                    </div>
+                {% endfor %}
+            </details>
+        {% endmacro %}
+
+  </head>
+  <body>
+  <div class=menu>
+ <ul>
+ <li class = active><a href={{ url_for("search")}}>Поиск книг</a></li>
+ </ul>
+ </div>
+  <div class="container">
+  <div class="search-block">
+      <aside class="filter-panel">
+          <form class="filter" action={{ url_for("search") }}>
+              {{ render_select('Жанр', genres) }}
+             {{ render_select('Автор', authors) }}
+             {{ render_select('Издательство', publishers) }}
+              <div class="aside__control">
+                  <input type="submit" value="Найти">
+                  <input type="reset" value="Очистить">
+              </div>
+          </form>
+      </aside>
+      <div class="main">
+              <form action={{ url_for("index") }}>
+                  <input type="submit" value="Не выбирать книгу">
+              </form>
+              <div class="main__search-settings">
+              {{ render_selected_search(search_genres, search_authors, search_publishers) }}
+              </div>
+      {{ render_table(table_name, relations) }}
+      </div>
+  </div>
+  </div>
+  </body>
+</html>

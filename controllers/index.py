@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, session
 from utils import get_db_connection
-from models.index_model import get_reader, get_book_reader, get_new_reader, borrow_book
+from models.index_model import get_reader, get_book_reader, get_new_reader, borrow_book, return_book
 
 
 @app.route('/', methods=['get'])
@@ -28,6 +28,12 @@ def index():
     elif request.values.get('noselect'):
         a = 1
     # вошли первый раз
+    elif request.values.get('return'):
+        return_book_id = int(request.values.get('return'))
+        user_id = session['reader_id']
+        print(f"Читатель {user_id} возвращает книгу: {return_book_id}")
+        return_book(conn, return_book_id, user_id)
+
     else:
         session['reader_id'] = 1
         # df_reader = get_reader(conn)

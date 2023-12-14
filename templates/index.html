@@ -27,7 +27,7 @@
  <td>
  {% if relation.loc[i, name] == None %}
  <form action = '' method ="get">
- <input type="hidden" name = return value={{relation.loc[i, "book_reader_id"]}}>
+ <input type="hidden" name = "return" value={{relation.loc[i, "book_reader_id"]}}>
  <input type="submit" value="Сдать">
  </form>
  {% else %}
@@ -47,8 +47,8 @@
  <div class=menu>
  <ul>
  <li class = active><a href={{ url_for("index")}}>Читатель</a></li>
-{# <li><a href={{ url_for("book")}}>Книги</a></li>#}
-{# <li><a href={{ url_for("statistics")}}>Статистика</a></li>#}
+ <li><a href='#'>Книги</a></li>
+ <li><a href='#'>Статистика</a></li>
  </ul>
  </div>
  <div class = block>
@@ -81,8 +81,8 @@
  {{ render_table("Карточка",book_reader, "book_reader_id") }}
  </p>
  <!-- Пока страница не создана, не указывать ее в action -->
- <form  method="get">
- <input type="submit" value="Взять книгу">
+ <form action="{{url_for('search')}}" method="get">
+ <input type="submit" value="Взять книгу" >
  </form>
  </p>
  </div>

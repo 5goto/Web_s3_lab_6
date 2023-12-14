@@ -1,4 +1,5 @@
 import pandas
+from datetime import datetime
 
 
 def get_reader(conn):
@@ -36,6 +37,31 @@ def get_new_reader(conn, new_reader):
     cur.execute("insert into reader (reader_name) values (:name)", {"name": new_reader})
     conn.commit()
     return cur.lastrowid
+
+
+# сдаем книгу
+def return_book(conn, book_reader_id, reader_id):
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    cur = conn.cursor()
+    try:
+        cur.execute('BEGIN')
+        book_id = cur.execute(f'''SELECT book_id FROM book_reader WHERE book_reader_id = {book_reader_id}''').fetchone()[0]
+        if book_id is None:
+            return
+
+        cur.execute(f'''update book_reader 
+        set return_date = '{current_date}' 
+        where reader_id = {reader_id} 
+        and book_reader_id = {book_reader_id}''')
+
+        cur.execute(f'''UPDATE book
+        SET available_numbers = available_numbers + 1
+        WHERE book_id = {book_id}''')
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print('Ошибка при выполнении транзакции: ', e)
 
 
 # для обработки данных о взятой книге
